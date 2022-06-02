@@ -47,5 +47,6 @@ export const Manager = (() => {
     use,
     init,
     play,
+    getName: () => current?.generatorName,
   }
 })();

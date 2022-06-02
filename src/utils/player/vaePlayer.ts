@@ -24,5 +24,6 @@ export function useVae(): MusicGenerator {
   return {
     init,
     play,
+    generatorName: "MusicVAE",
   }
 }

@@ -6,15 +6,15 @@ import {fromMidi} from "tonal-note";
 import {MusicGenerator} from "./types";
 
 export function useRnn(): MusicGenerator {
-  const improvCheckpoint = 'https://storage.googleapis.com/magentadata/js/checkpoints/music_rnn/chord_pitches_improv'
-  const improvRNN = new MusicRNN(improvCheckpoint);
+  const improvCheckpoint = 'https://storage.googleapis.com/magentadata/js/checkpoints/music_rnn/chord_pitches_improv';
+  const musicRNN = new MusicRNN(improvCheckpoint);
   const synth = new Synth().toDestination();
   let improvisedMelody: INoteSequence | undefined;
-  
+
   const init = async () => {
     const quantizedSequence = sequences.quantizeNoteSequence(RnnSequence, 1);
-    await improvRNN.initialize();
-    improvisedMelody = await improvRNN.continueSequence(
+    await musicRNN.initialize();
+    improvisedMelody = await musicRNN.continueSequence(
       quantizedSequence,
       60,
       1.1,
@@ -27,7 +27,7 @@ export function useRnn(): MusicGenerator {
   //     synth.triggerAttackRelease(fromMidi(note.pitch), note.endTime - note.startTime, note.startTime)
   //   })
   // }
-  
+
   const playGeneratedMelody = () => {
     if (improvisedMelody && improvisedMelody.notes) {
       improvisedMelody.notes.forEach(note => {
@@ -45,5 +45,6 @@ export function useRnn(): MusicGenerator {
   return {
     init,
     play: playGeneratedMelody,
+    generatorName: "MusicRNN",
   }
 }

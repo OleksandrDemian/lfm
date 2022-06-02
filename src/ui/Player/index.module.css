@@ -1,0 +1,32 @@
+.player {
+    display: flex;
+    align-items: center;
+    padding: 16px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-small);
+
+    gap: 0.5rem;
+
+    margin-top: 20vh;
+}
+
+.title {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.playButton {
+    padding: 16px 12px;
+    background-color: white;
+    border: 1px solid #eaeaea;
+    border-radius: var(--border-radius);
+    min-width: 150px;
+}
+
+.playButton:not(:disabled) {
+    cursor: pointer;
+}
+
+.playButton:not(:disabled):hover {
+    border: 1px solid #000;
+}
