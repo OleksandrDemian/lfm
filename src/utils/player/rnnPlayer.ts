@@ -30,16 +30,21 @@ export function useRnn(): MusicGenerator {
 
   const playGeneratedMelody = () => {
     if (improvisedMelody && improvisedMelody.notes) {
+      let totalDuration = 0;
       improvisedMelody.notes.forEach(note => {
         if (note.pitch && note.quantizedEndStep && note.quantizedStartStep) {
+          const noteDuration = note.quantizedEndStep - note.quantizedStartStep;
+          totalDuration += noteDuration;
           synth.triggerAttackRelease(
             fromMidi(note.pitch),
-            note.quantizedEndStep - note.quantizedStartStep,
+            noteDuration,
             note.quantizedStartStep
           );
         }
       });
+      return totalDuration;
     }
+    return 0;
   }
   
   return {

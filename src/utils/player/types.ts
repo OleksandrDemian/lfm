@@ -1,7 +1,9 @@
 export type MusicGenerator = {
   init: () => Promise<void>;
-  play: () => void;
+  play: () => number;// returns duration
   generatorName: string;
 }
 
-export type InitListener = () => void;
+export type ManagerListener = {
+  onState: (state: number) => void;
+};

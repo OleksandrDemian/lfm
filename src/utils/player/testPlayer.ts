@@ -217,6 +217,7 @@ export const useTest = (): MusicGenerator => {
     // todo: https://github.dev/Gogul09/deep-drum
     //  playPattern
     //  scheduleTimeOn
+    return 0;
   };
 
   return {

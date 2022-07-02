@@ -16,6 +16,7 @@ export function useVae(): MusicGenerator {
   const play = () => {
     if (sample) {
       player.start(sample);
+      return 0;
     } else {
       throw new Error("useVae: No sample");
     }

@@ -1,29 +1,52 @@
 import {createSignal, onCleanup, onMount} from "solid-js";
-import {Manager} from "./manager";
+import {Manager, ManagerState, ManagerType} from "./manager";
 import {useRnn} from "./rnnPlayer";
 import {useVae} from "./vaePlayer";
 import {useTest} from "./testPlayer";
 
-// Manager.use(useVae());
-// Manager.use(useRnn());
-Manager.use(useTest());
-Manager.init();
+export const ManagerId = {
+  VAE: 'vae',
+  RNN: 'rnn',
+  TEST: 'test',
+} as const;
+type ManagerIdKeys = keyof typeof ManagerId;
+export type ManagerIdType = typeof ManagerId[ManagerIdKeys];
 
-export const createPlayer = () => {
-  const [initialized, setInitialized] = createSignal(Manager.isReady());
+const Managers: {[p in ManagerIdType]: ManagerType} = {
+  [ManagerId.VAE]: Manager({
+    musicGenerator: useVae(),
+  }),
+  [ManagerId.RNN]: Manager({
+    musicGenerator: useRnn(),
+  }),
+  [ManagerId.TEST]: Manager({
+    musicGenerator: useTest(),
+  }),
+};
+
+export type CreatePlayerProps = {
+  id: ManagerIdType;
+};
+export const createPlayer = ({ id }: CreatePlayerProps) => {
+  const manager = Managers[id];
+  const [state, setState] = createSignal<number>(manager.getState());
   
   onMount(() => {
-    if (!Manager.isReady()) {
-      const listenerCleanup = Manager.addListener(() => {
-        setInitialized(true);
-      });
-      onCleanup(listenerCleanup);
-    }
+    onCleanup(manager.addListener({
+      onState: setState,
+    }));
   });
   
+  const init = () => {
+    if (manager.getState() === ManagerState.IDLE) {
+      manager.init();
+    }
+  };
+
   return {
-    initialized,
-    play: Manager.play,
-    generatorName: Manager.getName(),
+    play: manager.play,
+    generatorName: manager.getName(),
+    init,
+    state,
   }
 }
